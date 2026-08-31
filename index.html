@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conference Trip Countdown</title>
+  <style>
+    :root {
+      --accent: #ffd166;
+      --accent-2: #06d6a0;
+      --glow: rgba(255, 209, 102, 0.6);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Avenir Next", Helvetica, sans-serif;
+      font-size: 120%;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+      background-color: #10131a;
+    }
+
+    .bg {
+      position: fixed;
+      inset: 0;
+      background-image: url("./bg.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: -2;
+    }
+
+    /* Dark overlay so text stays readable on top of any photo */
+    .bg::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.55));
+      z-index: -1;
+    }
+
+    .container {
+      text-align: center;
+      padding: 2rem;
+      max-width: 90vw;
+    }
+
+    .eyebrow {
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      color: var(--accent-2);
+      margin-bottom: 0.5rem;
+      opacity: 0.9;
+    }
+
+    h1 {
+      font-weight: 600;
+      font-size: clamp(1.5rem, 4vw, 2.6rem);
+      margin: 0 0 2rem 0;
+      text-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+    }
+
+    .flight-info {
+      font-size: 1rem;
+      opacity: 0.85;
+      margin-top: 1.5rem;
+    }
+
+    .countdown {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+    }
+
+    .unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 110px;
+    }
+
+    .value {
+      position: relative;
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      font-weight: 700;
+      line-height: 1;
+      padding: 0.4em 0.2em;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      min-width: 1.9em;
+      backdrop-filter: blur(6px);
+      text-shadow:
+        0 0 10px var(--glow),
+        0 0 20px var(--glow);
+      animation: pulse 1s ease-in-out infinite;
+    }
+
+    .value.tick {
+      animation: pulse 1s ease-in-out infinite, flash 0.5s ease-out;
+    }
+
+    .label {
+      margin-top: 0.6rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0.75;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 15px rgba(255, 209, 102, 0.25), 0 0 0 rgba(6, 214, 160, 0);
+      }
+
+      50% {
+        box-shadow: 0 0 30px rgba(255, 209, 102, 0.55), 0 0 15px rgba(6, 214, 160, 0.35);
+      }
+    }
+
+    @keyframes flash {
+      0% {
+        transform: scale(1.25);
+        color: var(--accent-2);
+        text-shadow: 0 0 25px var(--accent-2), 0 0 45px var(--accent-2);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .arrived {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 700;
+      color: var(--accent);
+      text-shadow: 0 0 25px var(--glow), 0 0 45px var(--glow);
+      animation: pulse 1s ease-in-out infinite;
+    }
+
+    /* Floating sparkle particles for extra flashiness */
+    .sparkles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .sparkle {
+      position: absolute;
+      bottom: -10px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px 2px var(--accent);
+      opacity: 0.8;
+      animation: rise linear infinite;
+    }
+
+    @keyframes rise {
+      0% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(-110vh) translateX(20px);
+        opacity: 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .countdown {
+        gap: 0.75rem;
+      }
+
+      .unit {
+        min-width: 70px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="bg"></div>
+  <div class="sparkles" id="sparkles"></div>
+
+  <div class="container">
+    <div class="eyebrow">Provence 2026</div>
+    <h1>Time until takeoff ✈️</h1>
+
+    <div class="countdown" id="countdown">
+      <div class="unit">
+        <div class="value" id="days">00</div>
+        <div class="label">Days</div>
+      </div>
+      <div class="unit">
+        <div class="value" id="hours">00</div>
+        <div class="label">Hours</div>
+      </div>
+      <div class="unit">
+        <div class="value" id="minutes">00</div>
+        <div class="label">Minutes</div>
+      </div>
+      <div class="unit">
+        <div class="value" id="seconds">00</div>
+        <div class="label">Seconds</div>
+      </div>
+    </div>
+
+    <div class="flight-info">Flight departs 18:40 &middot; September 17</div>
+  </div>
+
+  <script>
+    (function () {
+      // Flight departure: 18:40 on September 17.
+      // Uses the current year, rolling over to next year if that date has already passed.
+      function getTargetDate() {
+        const now = new Date();
+        let year = now.getFullYear();
+        let target = new Date(year, 8, 17, 18, 40, 0); // month is 0-indexed: 8 = September
+        if (target.getTime() <= now.getTime()) {
+          target = new Date(year + 1, 8, 17, 18, 40, 0);
+        }
+        return target;
+      }
+
+      const targetDate = getTargetDate();
+
+      const els = {
+        days: document.getElementById("days"),
+        hours: document.getElementById("hours"),
+        minutes: document.getElementById("minutes"),
+        seconds: document.getElementById("seconds"),
+      };
+
+      const countdownEl = document.getElementById("countdown");
+      const flightInfoEl = document.querySelector(".flight-info");
+
+      let previous = {days: null, hours: null, minutes: null, seconds: null};
+
+      function pad(n) {
+        return String(n).padStart(2, "0");
+      }
+
+      function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = targetDate.getTime() - now;
+
+        if (distance <= 0) {
+          countdownEl.innerHTML = '<div class="arrived">Bon voyage! 🎉</div>';
+          flightInfoEl.textContent = "Enjoy the conference!";
+          clearInterval(timer);
+          return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        setValue("days", days);
+        setValue("hours", hours);
+        setValue("minutes", minutes);
+        setValue("seconds", seconds);
+      }
+
+      function setValue(unit, value) {
+        const el = els[unit];
+        const text = pad(value);
+        if (previous[unit] !== value) {
+          el.textContent = text;
+          el.classList.remove("tick");
+          // Force reflow so the animation restarts every time the value changes
+          void el.offsetWidth;
+          el.classList.add("tick");
+          previous[unit] = value;
+        }
+      }
+
+      updateCountdown();
+      const timer = setInterval(updateCountdown, 1000);
+
+      // Generate floating sparkle particles
+      const sparklesContainer = document.getElementById("sparkles");
+      const sparkleCount = 30;
+      for (let i = 0; i < sparkleCount; i++) {
+        const sparkle = document.createElement("div");
+        sparkle.className = "sparkle";
+        sparkle.style.left = Math.random() * 100 + "vw";
+        sparkle.style.animationDuration = 4 + Math.random() * 6 + "s";
+        sparkle.style.animationDelay = Math.random() * 8 + "s";
+        sparkle.style.opacity = 0.4 + Math.random() * 0.6;
+        sparklesContainer.appendChild(sparkle);
+      }
+    })();
+  </script>
+
+</body>
+
+</html>
