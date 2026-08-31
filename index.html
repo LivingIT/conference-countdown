@@ -8,11 +8,10 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="manifest" href="/site.webmanifest">
   <style>
     :root {
       --accent: #ffd166;
-      --accent-2: #06d6a0;
+      --accent-2: #ff8705;
       --glow: rgba(255, 209, 102, 0.6);
     }
 
@@ -68,13 +67,14 @@
     .eyebrow {
       letter-spacing: 0.3em;
       text-transform: uppercase;
-      font-size: 0.8rem;
+      font-size: 1.4rem;
+      font-weight: 400;
       color: var(--accent-2);
-      margin-bottom: 0.5rem;
+      margin: 0 0 0.5rem 0;
       opacity: 0.9;
     }
 
-    h1 {
+    h2 {
       font-weight: 600;
       font-size: clamp(1.5rem, 4vw, 2.6rem);
       margin: 0 0 2rem 0;
@@ -218,8 +218,8 @@
   <div class="sparkles" id="sparkles"></div>
 
   <div class="container">
-    <div class="eyebrow">Provence 2026</div>
-    <h1>Time until takeoff ✈️</h1>
+    <h1 class="eyebrow">Provence 2026</h1>
+    <h2>Time until takeoff ✈️</h2>
 
     <div class="countdown" id="countdown">
       <div class="unit">
