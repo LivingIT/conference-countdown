@@ -12,9 +12,11 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <style>
     :root {
-      --accent: #ffd166;
-      --accent-2: #ff8705;
-      --glow: rgba(255, 209, 102, 0.6);
+      --accent: light-dark(#ffd166, #ffd168);
+      --accent-2: light-dark(#ff8705, #ff8717);
+      --glow: light-dark(rgba(255, 209, 102, 0.6)),
+        rgba(255, 209, 102, 0.4)),
+      ;
     }
 
     * {
@@ -31,14 +33,14 @@
     body {
       font-family: "Avenir Next", Helvetica, sans-serif;
       font-size: 120%;
-      color: #fff;
+      color: light-dark(#fff, #fff);
       display: flex;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
       position: relative;
       overflow: hidden;
-      background-color: #10131a;
+      background-color: light-dark(#10131a, #000);
     }
 
     .bg {
@@ -69,7 +71,8 @@
     .eyebrow {
       letter-spacing: 0.3em;
       text-transform: uppercase;
-      font-size: 1.4rem;
+      text-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+      font-size: clamp(1.5rem, 4vw, 2.4rem);
       font-weight: 400;
       color: var(--accent-2);
       margin: 0 0 0.5rem 0;
@@ -80,13 +83,14 @@
       font-weight: 600;
       font-size: clamp(1.5rem, 4vw, 2.6rem);
       margin: 0 0 2rem 0;
-      text-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+      text-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
     }
 
     .flight-info {
       font-size: 1rem;
       opacity: 0.85;
       margin-top: 1.5rem;
+      text-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
     }
 
     .countdown {
@@ -108,7 +112,7 @@
       font-weight: 700;
       line-height: 1;
       padding: 0.4em 0.2em;
-      color: #fff;
+      color: light-dark(#fff, #efefef);
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 16px;
